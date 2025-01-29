@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import { useToast } from "primevue/usetoast";
+const { showSuccessMessage } = useMessages()
+import { useConfirm } from "primevue/useconfirm";
+
+const confirm = useConfirm();
 
 const selectedCity = ref();
 const cities = ref([
@@ -14,7 +17,7 @@ const toggleDarkMode = () => {
   document.documentElement.classList.toggle('my-app-dark');
 };
 const onClick = () => {
-  toast.add({ severity: 'info', summary: 'Info', detail: 'Message Content', life: 3000 });
+  showSuccessMessage('Message Content');
 };
 </script>
 <template>
@@ -31,6 +34,8 @@ const onClick = () => {
       <div class="flex justify-center mt-4 gap-5">
         <Button label="Toggle Dark Mode" @click="toggleDarkMode()" />
         <Button @click="onClick" class="bg-red-500">Show notify</Button>
+        <Button @click="onClick" class="bg-red-500">Show notify</Button>
+        <Button @click="confirm1()" label="Save" outlined></Button>
         <Icon name="uil:github"/>
       </div>
     </div>

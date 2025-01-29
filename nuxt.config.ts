@@ -11,6 +11,7 @@ export default defineNuxtConfig({
       '@vee-validate/nuxt',
       '@nuxt/icon'
     ],
+    css: ["primeicons/primeicons.css"],
     primevue: {
         autoImport: true,
         usePrimeVue: true,
@@ -27,6 +28,11 @@ export default defineNuxtConfig({
                 },
             },
             ripple: true,
+        },
+    },
+    runtimeConfig: {
+        public: {
+            baseURL: process.env.BASE_URL || 'http://localhost:5001/api/',
         },
     }
 })
