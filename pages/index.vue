@@ -13,8 +13,18 @@ const cities = ref([
   { name: 'Paris', code: 'PRS' }
 ]);
 const toast = useToast();
+// const toggleDarkMode = () => {
+//   document.documentElement.classList.toggle('dark');
+// };
 const toggleDarkMode = () => {
-  document.documentElement.classList.toggle('my-app-dark');
+  const isDarkMode = localStorage.getItem('darkMode') === 'true';
+  if (isDarkMode) {
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('darkMode', 'false');
+  } else {
+    document.documentElement.classList.add('dark');
+    localStorage.setItem('darkMode', 'true');
+  }
 };
 const onClick = () => {
   showSuccessMessage('Message Content');

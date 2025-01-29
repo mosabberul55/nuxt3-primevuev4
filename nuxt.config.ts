@@ -20,7 +20,7 @@ export default defineNuxtConfig({
                 preset: MyPresetTheme,
                 // cssLayer: false,
                 options: {
-                    darkModeSelector: '.my-app-dark',
+                    darkModeSelector: '.dark',
                     cssLayer: {
                         name: 'primevue',
                         order: 'tailwind-base, primevue, tailwind-utilities'
