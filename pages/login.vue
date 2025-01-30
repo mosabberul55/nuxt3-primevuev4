@@ -1,47 +1,26 @@
 <script setup lang="ts">
-import {useForm} from "vee-validate";
-import * as yup from "yup";
+import {useLoginForm} from "~/composables/form/useLoginForm";
+import {useAuth} from "~/composables/services/useAuth";
+
 
 definePageMeta({
   layout: 'blank'
 })
 
-const router = useRouter()
-const authStore = useAuthStore()
-const { showSuccessMessage, showErrorMessage } = useMessages()
+const { showErrorMessage } = useMessages()
+const { errors, handleSubmit, setErrors, email, emailAttrs, password, passwordAttrs } = useLoginForm()
+const { login } = useAuth();
 
 const isLoading = ref<boolean>(false)
 
-const {errors, handleSubmit, defineField, setErrors} = useForm({
-  validationSchema: yup.object({
-    email: yup.string().email().required(),
-    password: yup.string().min(6).required(),
-  }),
-});
 
-const [email, emailAttrs] = defineField('email');
-const [password, passwordAttrs] = defineField('password');
-
-const onSubmit = handleSubmit(async values => {
-  isLoading.value = true
-  const { data, error } = await authStore.login(values)
-  if (error && error.value) {
-    console.log(error.value.data)
-    if (error.value.data.statusCode === 422) {
-      setErrors(error.value.data.message)
-    } else {
-      setErrors({
-        "email": [
-          error.value.data.message
-        ]
-      })
-    }
-    showErrorMessage('Invalid email or password')
-  } else {
-    showSuccessMessage('Login successful')
-    await router.push('/')
+const onSubmit = handleSubmit(async (values) => {
+  isLoading.value = true;
+  const result = await login({ email: values.email, password: values.password });
+  if (result.errors) {
+    setErrors(result.errors);
   }
-  isLoading.value = false
+  isLoading.value = false;
 });
 
 </script>
