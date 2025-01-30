@@ -61,12 +61,12 @@ const onSubmit = handleSubmit(async values => {
           <form class="space-y-4 md:space-y-6" @submit.prevent="onSubmit">
             <div>
               <label for="email" class="block mb-2 text-sm font-medium">Your email</label>
-              <InputText type="text" v-model="email" v-bind="emailAttrs"  fluid/>
+              <InputText type="text" v-model="email" v-bind="emailAttrs" :invalid="!!errors.email" fluid/>
               <Message v-if="errors.email" severity="error" size="small" variant="simple">{{ errors.email}}</Message>
             </div>
             <div>
               <label for="Password" class="block mb-2 text-sm font-medium">Your password</label>
-              <Password toggleMask :feedback="false" v-model="password" v-bind="passwordAttrs"  fluid/>
+              <Password toggleMask :feedback="false" v-model="password" v-bind="passwordAttrs" :invalid="!!errors.password" fluid/>
               <Message v-if="errors.password" severity="error" size="small" variant="simple">{{ errors.password}}</Message>
             </div>
             <Button :disabled="isLoading" type="submit" :loading="isLoading" raised fluid>
