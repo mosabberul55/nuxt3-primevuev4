@@ -7,7 +7,7 @@ definePageMeta({
   layout: 'blank'
 })
 
-const { showErrorMessage } = useMessages()
+const { showErrorMessage, showSuccessMessage } = useMessages()
 const { errors, handleSubmit, setErrors, email, emailAttrs, password, passwordAttrs } = useLoginForm()
 const { login } = useAuth();
 
@@ -19,7 +19,9 @@ const onSubmit = handleSubmit(async (values) => {
   const result = await login({ email: values.email, password: values.password });
   if (result.errors) {
     setErrors(result.errors);
+    showErrorMessage('Invalid email or password');
   }
+  showSuccessMessage('Login successful');
   isLoading.value = false;
 });
 

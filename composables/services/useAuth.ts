@@ -1,7 +1,6 @@
 export function useAuth() {
     const router = useRouter();
     const authStore = useAuthStore();
-    const { showSuccessMessage } = useMessages();
 
     const login = async (values: { email: string; password: string }) => {
         const { data, error } = await authStore.login(values);
@@ -12,7 +11,7 @@ export function useAuth() {
                 return { errors: { email: [error.value.data.message] } };
             }
         } else {
-            showSuccessMessage('Login successful');
+
             await router.push('/');
             return { data };
         }
