@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import {useForm} from "vee-validate";
 import * as yup from "yup";
-import {useToast} from "primevue/usetoast";
-
 
 definePageMeta({
   layout: 'blank'
 })
 
-const toast = useToast();
+const router = useRouter()
+const authStore = useAuthStore()
+const { showSuccessMessage, showErrorMessage } = useMessages()
 
 const isLoading = ref<boolean>(false)
+
 const {errors, handleSubmit, defineField, setErrors} = useForm({
   validationSchema: yup.object({
     email: yup.string().email().required(),
@@ -23,7 +24,24 @@ const [password, passwordAttrs] = defineField('password');
 
 const onSubmit = handleSubmit(async values => {
   isLoading.value = true
-  toast.add({ severity: 'info', summary: 'Info', detail: 'Message Content', life: 3000 });
+  const { data, error } = await authStore.login(values)
+  if (error && error.value) {
+    console.log(error.value.data)
+    if (error.value.data.statusCode === 422) {
+      setErrors(error.value.data.message)
+    } else {
+      setErrors({
+        "email": [
+          error.value.data.message
+        ]
+      })
+    }
+    showErrorMessage('Invalid email or password')
+  } else {
+    showSuccessMessage('Login successful')
+    await router.push('/')
+  }
+  isLoading.value = false
   setErrors({})
 });
 
@@ -43,12 +61,12 @@ const onSubmit = handleSubmit(async values => {
           <form class="space-y-4 md:space-y-6" @submit.prevent="onSubmit">
             <div>
               <label for="email" class="block mb-2 text-sm font-medium">Your email</label>
-              <InputText type="text" v-model="email" v-bind="emailAttrs" :invalid="errors.email" fluid/>
+              <InputText type="text" v-model="email" v-bind="emailAttrs"  fluid/>
               <Message v-if="errors.email" severity="error" size="small" variant="simple">{{ errors.email}}</Message>
             </div>
             <div>
               <label for="Password" class="block mb-2 text-sm font-medium">Your password</label>
-              <Password toggleMask :feedback="false" v-model="password" v-bind="passwordAttrs" :invalid="errors.password" fluid/>
+              <Password toggleMask :feedback="false" v-model="password" v-bind="passwordAttrs"  fluid/>
               <Message v-if="errors.password" severity="error" size="small" variant="simple">{{ errors.password}}</Message>
             </div>
             <Button :disabled="isLoading" type="submit" :loading="isLoading" raised fluid>
