@@ -42,7 +42,6 @@ const onSubmit = handleSubmit(async values => {
     await router.push('/')
   }
   isLoading.value = false
-  setErrors({})
 });
 
 </script>
