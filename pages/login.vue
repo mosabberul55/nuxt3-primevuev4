@@ -7,21 +7,21 @@ definePageMeta({
   layout: 'blank'
 })
 
-const { showErrorMessage, showSuccessMessage } = useMessages()
-const { errors, handleSubmit, setErrors, email, emailAttrs, password, passwordAttrs } = useLoginForm()
-const { login } = useAuth();
+const {showErrorMessage, showSuccessMessage} = useMessages()
+const {errors, handleSubmit, setErrors, email, emailAttrs, password, passwordAttrs} = useLoginForm()
+const {login} = useAuth();
 
 const isLoading = ref<boolean>(false)
 
 
 const onSubmit = handleSubmit(async (values) => {
   isLoading.value = true;
-  const result = await login({ email: values.email, password: values.password });
+  const result = await login({email: values.email, password: values.password});
   if (result.errors) {
     setErrors(result.errors);
     showErrorMessage('Invalid email or password');
-  }
-  showSuccessMessage('Login successful');
+  } else
+    showSuccessMessage('Login successful');
   isLoading.value = false;
 });
 
@@ -42,12 +42,14 @@ const onSubmit = handleSubmit(async (values) => {
             <div>
               <label for="email" class="block mb-2 text-sm font-medium">Your email</label>
               <InputText type="text" v-model="email" v-bind="emailAttrs" :invalid="!!errors.email" fluid/>
-              <Message v-if="errors.email" severity="error" size="small" variant="simple">{{ errors.email}}</Message>
+              <Message v-if="errors.email" severity="error" size="small" variant="simple">{{ errors.email }}</Message>
             </div>
             <div>
               <label for="Password" class="block mb-2 text-sm font-medium">Your password</label>
-              <Password toggleMask :feedback="false" v-model="password" v-bind="passwordAttrs" :invalid="!!errors.password" fluid/>
-              <Message v-if="errors.password" severity="error" size="small" variant="simple">{{ errors.password}}</Message>
+              <Password toggleMask :feedback="false" v-model="password" v-bind="passwordAttrs"
+                        :invalid="!!errors.password" fluid/>
+              <Message v-if="errors.password" severity="error" size="small" variant="simple">{{ errors.password }}
+              </Message>
             </div>
             <Button :disabled="isLoading" type="submit" :loading="isLoading" raised fluid>
               Sign in
